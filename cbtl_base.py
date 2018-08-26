@@ -67,7 +67,6 @@ class cowboytimeline:
         for v in self.tl["frames"]:
             n = v
             n.thumbnail((400,(self.tl["mdata"]["size"][1]*((self.tl["mdata"]["size"][0]/400) ) )) )
-            n.show()
             thumbs.append(n)
         return thumbs
     
