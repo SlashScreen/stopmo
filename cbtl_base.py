@@ -13,12 +13,18 @@ class cowboytimeline:
         self.tl["frames"] = []
         self.tl["mdata"] = {}
         if not fromFile:
-            self.tl["frames"]=contents
+            if not contents == []:
+                self.tl["frames"]=contents
+            else:
+                self.tl["frames"] = [Image.new("RGB",(1920,1080),color=0)]
             if data == {}:
                 self.tl["mdata"] = {}
                 self.tl["mdata"]["size"] = self.tl["frames"][0].size
                 self.tl["mdata"]["format"] = self.tl["frames"][0].format
-                self.tl["mdata"]["duration"] = len(self.tl["frames"])
+                if not len(self.tl["frames"]) is None:
+                    self.tl["mdata"]["duration"] = len(self.tl["frames"])
+                else:
+                    self.tl["mdata"]["duration"] = 0
                 self.tl["mdata"]["fps"] = 6
             else:
                 self.tl["mdata"]=data
@@ -26,7 +32,7 @@ class cowboytimeline:
             with ZipFile(file) as archive:
                 for i in range (len(archive.infolist())-1):
                     with archive.open("tl/{i}.png".format(i=i)) as file:
-                        self.tl["frames"].append(Image.open(file))
+                        self.tl["frames"].append(Image.open(file).resize(self.get(0).size))
             f = open("./tl/tl.cbtldat","r+")
             lines = f.read()
             self.tl["mdata"] = ast.literal_eval(lines)
@@ -53,22 +59,25 @@ class cowboytimeline:
         if frame > len(self.tl["frames"]):
             for f in range(frame-len(self.tl)):
                 self.tl["frames"].append(Image.new("RGB",self.tl["frames"][0].size,color=0))
-            self.tl["frames"].append(value)
+            self.tl["frames"].append(value).resize(self.get(0).size)
         else:
-            self.tl["frames"].insert(frame,value)
+            self.tl["frames"].insert(frame,value.resize(self.get(0).size))
         self.updateMData()
 
     def replace(self,frame,value):
         if frame > len(self.tl["frames"]):
             for f in range(frame-len(self.tl)):
                 self.tl["frames"].append(Image.new("RGB",self.tl["frames"][0].size,color=0))
-            self.tl["frames"].append(value)
+            self.tl["frames"].append(value.resize(self.get(0).size))
         else:
-            self.tl["frames"][frame]=value
+            self.tl["frames"][frame]=value.resize(self.get(0).size)
         self.updateMData()
 
     def delete(self,frame):
         self.tl["frames"].remove(frame-1)
+
+    def append(self,img):
+        self.tl["frames"].append(img.resize(self.get(0).size))
 
     def save(self,filename,debug=False):
         f= open("./tl/tl.cbtldat","w+")
@@ -102,7 +111,7 @@ class cowboytimeline:
         images = sorted([img for img in sorted(os.listdir(image_folder)) if img.endswith(".png")],key=cleanFilename)
         frame = cv2.imread(os.path.join(image_folder, images[0]))
         height, width, layers = frame.shape
-        video = cv2.VideoWriter(video_name, -1, self.getMData(), (width,height))
+        video = cv2.VideoWriter(video_name, -1, self.getMData()["fps"], (width,height))
 
         for image in images:
             video.write(cv2.imread(os.path.join(image_folder, image)))
