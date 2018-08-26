@@ -56,7 +56,6 @@ class cowboytimeline:
             
 
     def get(self,frame=None):
-        print("frames count:",len(self.tl["frames"]),"i:",frame)
         if frame is None:
             return self.tl["frames"]
         else:
