@@ -1,4 +1,4 @@
-from PIL import Image,ImageFont,ImageDraw
+from PIL import Image,ImageFont,ImageDraw,ImageTk
 from zipfile import ZipFile
 import ast
 import cv2
@@ -16,6 +16,8 @@ def constructMData(size,form,dur,fps):
     mdata["duration"] = dur
     mdata["fps"] = fps
     return mdata
+
+
 
 class cowboytimeline:
     def __init__(self,contents=[],data={},fromFile=False,file=None):
@@ -50,7 +52,7 @@ class cowboytimeline:
                         if self.tl["frames"] == []:
                             self.tl["frames"].append(Image.open(file))
                         else:
-                            self.tl["frames"].append(Image.open(file).resize(self.tl["mdata"]["size"])) #problem
+                            self.tl["frames"].append(Image.open(file).resize(self.tl["mdata"]["size"]))
             
 
     def get(self,frame=None):
@@ -60,6 +62,15 @@ class cowboytimeline:
         else:
             return self.tl["frames"][frame]
 
+    def genThumb(self):
+        thumbs = []
+        for v in self.tl["frames"]:
+            n = v
+            n.thumbnail((400,(self.tl["mdata"]["size"][1]*((self.tl["mdata"]["size"][0]/400) ) )) )
+            n.show()
+            thumbs.append(n)
+        return thumbs
+    
     def getMData(self):
         return self.tl["mdata"]
 
