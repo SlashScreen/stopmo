@@ -3,15 +3,26 @@ from zipfile import ZipFile
 import ast
 import cv2
 import os
+from tkinter import Tk
+from tkinter import filedialog
 
 def cleanFilename(string):
     return int(string.replace(".png",''))
+
+def constructMData(size,form,dur,fps):
+    mdata = {}
+    mdata["size"] = size
+    mdata["format"] = form
+    mdata["duration"] = dur
+    mdata["fps"] = fps
+    return mdata
 
 class cowboytimeline:
     def __init__(self,contents=[],data={},fromFile=False,file=None):
         self.tl={}
         self.tl["frames"] = []
         self.tl["mdata"] = {}
+        print(file)
         if not fromFile:
             if not contents == []:
                 self.tl["frames"]=contents
@@ -29,20 +40,25 @@ class cowboytimeline:
             else:
                 self.tl["mdata"]=data
         else:
+            print("fromfile")
             with ZipFile(file) as archive:
+                f = open("./tl/tl.cbtldat","r+")
+                lines = f.read()
+                self.tl["mdata"] = ast.literal_eval(lines)
                 for i in range (len(archive.infolist())-1):
                     with archive.open("tl/{i}.png".format(i=i)) as file:
-                        self.tl["frames"].append(Image.open(file).resize(self.get(0).size))
-            f = open("./tl/tl.cbtldat","r+")
-            lines = f.read()
-            self.tl["mdata"] = ast.literal_eval(lines)
+                        if self.tl["frames"] == []:
+                            self.tl["frames"].append(Image.open(file))
+                        else:
+                            self.tl["frames"].append(Image.open(file).resize(self.tl["mdata"]["size"])) #problem
+            
 
     def get(self,frame=None):
-        #print(frame)
+        print("frames count:",len(self.tl["frames"]),"i:",frame)
         if frame is None:
             return self.tl["frames"]
         else:
-            return self.tl["frames"][frame-1]
+            return self.tl["frames"][frame]
 
     def getMData(self):
         return self.tl["mdata"]
@@ -58,35 +74,35 @@ class cowboytimeline:
     def insert(self,frame,value):
         if frame > len(self.tl["frames"]):
             for f in range(frame-len(self.tl)):
-                self.tl["frames"].append(Image.new("RGB",self.tl["frames"][0].size,color=0))
-            self.tl["frames"].append(value).resize(self.get(0).size)
+                self.tl["frames"].append(Image.new("RGB",self.tl["mdata"]["size"],color=0))
+            self.tl["frames"].append(value.resize(self.get(0).size))
         else:
-            self.tl["frames"].insert(frame,value.resize(self.get(0).size))
+            self.tl["frames"].insert(frame,value.resize(self.tl["mdata"]["size"]))
         self.updateMData()
 
     def replace(self,frame,value):
         if frame > len(self.tl["frames"]):
             for f in range(frame-len(self.tl)):
-                self.tl["frames"].append(Image.new("RGB",self.tl["frames"][0].size,color=0))
-            self.tl["frames"].append(value.resize(self.get(0).size))
+                self.tl["frames"].append(Image.new("RGB",self.tl["mdata"]["size"],color=0))
+            self.tl["frames"].append(value.resize(sself.tl["mdata"]["size"]))
         else:
-            self.tl["frames"][frame]=value.resize(self.get(0).size)
+            self.tl["frames"][frame]=value.resize(self.tl["mdata"]["size"])
         self.updateMData()
 
     def delete(self,frame):
         self.tl["frames"].remove(frame-1)
 
     def append(self,img):
-        self.tl["frames"].append(img.resize(self.get(0).size))
+        self.tl["frames"].append(img.resize(self.tl["mdata"]["size"]))
 
     def save(self,filename,debug=False):
-        f= open("./tl/tl.cbtldat","w+")
-        with ZipFile('{n}.cowboytl'.format(n=filename), 'w') as archive:
+        
+        with ZipFile(filename, 'w') as archive:
             i=0
             for v in self.get():
                 if debug:
                     fnt = ImageFont.truetype('FreeMono.ttf', 40)
-                    tmp = Image.new("RGB",self.tl["frames"][0].size,color=0).convert("RGBA")
+                    tmp = Image.new("RGB",self.tl["mdata"]["size"],color=0).convert("RGBA")
                     d = ImageDraw.Draw(tmp)
                     d.text((0,0), str(i), font=fnt, fill=(255,255,255,128))
                     out = Image.alpha_composite(v.convert("RGBA"), tmp)
@@ -99,12 +115,16 @@ class cowboytimeline:
                     i=i
                 else:
                     i+=1
-            f.write(str(self.tl["mdata"]))
+            tldat = str(self.tl["mdata"])
+            f= open("./tl/tl.cbtldat","w+")
+            print (tldat)
+            f.write(tldat)
+            print("file:",f.read())
             archive.write("./tl/tl.cbtldat")
         f.close()
 
     def render(self,path,name):
-        self.save('./temp') #make this changable
+        self.save(filedialog.asksaveasfilename(defaultextension="*.cowboytl"))
         image_folder = path
         video_name = name
 
@@ -125,9 +145,9 @@ if __name__ == "__main__":
     test.insert(10,Image.open("intro2.png"))
     test.insert(3,Image.open("drfuchs.png"))
     test.replace(4,Image.open("intro1.png"))
-    test.save("./savedtl")
-    also = cowboytimeline(fromFile=True,file="savedtl.cowboytl")
+    test.save(filedialog.asksaveasfilename(defaultextension="*.cowboytl"))
+    also = cowboytimeline(fromFile=True,file=filedialog.askopenfilename())
     test.insert(7,Image.open("drfuchs.png"))
-    also.save("./othertl")
-    also.render("./tl","./out/pleasework.mp4")
+    also.save(filedialog.asksaveasfilename(defaultextension="*.cowboytl"))
+    also.render("./tl",filedialog.asksaveasfilename(defaultextension="*.mp4"))
 
