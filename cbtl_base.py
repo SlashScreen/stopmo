@@ -64,8 +64,8 @@ class cowboytimeline:
     def genThumb(self):
         thumbs = []
         for v in self.tl["frames"]:
-            n = v
-            n.thumbnail((400,int(self.tl["mdata"]["size"][1]*((self.tl["mdata"]["size"][0]/400) ) )) )
+            n = v.copy()
+            n.thumbnail((200,int(self.tl["mdata"]["size"][1]*(200/(self.tl["mdata"]["size"][0]) ) )) )
             thumbs.append(n)
         return thumbs
     

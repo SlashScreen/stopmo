@@ -40,7 +40,7 @@ class Application(tk.Frame):
             #self.entry.grid(row=6,column=i)
             i+=1
         self.activeimg = tk.Label(image=self.active)
-        self.activeimg.grid(row=6,column=5)
+        self.activeimg.grid(row=6,column=1)
 
     def say_hi(self):
         print("hi there, everyone!")
@@ -52,12 +52,12 @@ class Application(tk.Frame):
     def setActive(self,ind):
         print("called",ind)
         n = self.tl.get(ind)
-        n.resize((1000,int(n.height*n.width/1000)))
+        n.resize((600,int(n.height*600/n.width)))
         self.active = ImageTk.PhotoImage(n)
         self.update_tl()
     
 
-tl = tlbase.cowboytimeline(contents = [Image.open("krime.png"),Image.open("evil.png")])
+tl = tlbase.cowboytimeline(contents = [Image.open("pupyup.png"),Image.open("icecream.png")])
 root = tk.Tk()
 root.geometry("1000x800")
 app = Application(tl,master=root)
