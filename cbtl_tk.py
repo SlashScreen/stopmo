@@ -14,6 +14,7 @@ class Application(tk.Frame):
         #self.pack()
         self.grid()
         self.imgs = []
+        self.active = None
         self.create_widgets()
 
     def create_widgets(self):
@@ -31,18 +32,30 @@ class Application(tk.Frame):
         self.tlimgs = []
         for t in self.thumbs:
             self.tlimgs.append(ImageTk.PhotoImage(t))
-            self.tlimg = tk.Label(self,image = self.tlimgs[i])
-            self.tlimg.grid(row=5,column=i)
+            self.tlimg = {}
+            self.tlimg["index"] = i
+            self.tlimg["button"] = tk.Button(self,image = self.tlimgs[i],command = lambda: self.setActive(self.tlimg["index"])) #tk.Label(self,image = self.tlimgs[i])
+            self.tlimg["button"].grid(row=5,column=i)
             #self.entry = tk.Label(text=str(i))
             #self.entry.grid(row=6,column=i)
             i+=1
+        self.activeimg = tk.Label(image=self.active)
+        self.activeimg.grid(row=6,column=5)
 
     def say_hi(self):
         print("hi there, everyone!")
 
     def insert(self):
-        tl.insert(6,Image.open("drfuchs.png"))
+        tl.insert(6,Image.open("drfuchs.png")) #TODO: seperate window with frame + file browser
         self.update_tl()
+
+    def setActive(self,ind):
+        print("called",ind)
+        n = self.tl.get(ind)
+        n.resize((1000,int(n.height*n.width/1000)))
+        self.active = ImageTk.PhotoImage(n)
+        self.update_tl()
+    
 
 tl = tlbase.cowboytimeline(contents = [Image.open("krime.png"),Image.open("evil.png")])
 root = tk.Tk()
