@@ -15,6 +15,7 @@ class Application(tk.Frame):
         self.grid()
         self.imgs = []
         self.active = None
+        self.n = None
         self.create_widgets()
 
     def create_widgets(self):
@@ -45,10 +46,15 @@ class Application(tk.Frame):
 
     def draw_tl(self):
         for l in self.imgs:
+            print(l["index"],"index")
+            print(self.active)
             l["button"].configure(command = lambda: self.setActive(l["index"]))
             l["button"].grid(row=5,column=l["index"])
-        self.activeimg = tk.Label(image=self.active)
-        self.activeimg.grid(row=6,column=0)
+        if not self.active == None:
+            self.newactiveimage = self.active
+            self.activeimg = tk.Label(self,image=self.newactiveimage)
+            self.activeimg.grid(row=6,column=0)
+            self.draw_tl()
 
     def say_hi(self):
         print("hi there, everyone!")
@@ -59,10 +65,12 @@ class Application(tk.Frame):
 
     def setActive(self,ind):
         print("called",ind)
-        n = self.tl.get(ind)
-        n.resize((200,int(n.height*200/n.width)))
-        self.active = ImageTk.PhotoImage(n)
-        self.update_tl()
+        self.n = self.tl.get(ind)
+        self.n.resize((200,int(self.n.height*200/self.n.width)))
+        self.active = ImageTk.PhotoImage(self.n)
+        print(self.active)
+        #self.n.show()
+        #self.update_tl()
     
 
 tl = tlbase.cowboytimeline(contents = [Image.open("pupyup.png"),Image.open("icecream.png")])
