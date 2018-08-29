@@ -3,7 +3,7 @@ import cbtl_base as tlbase
 import cbtl_tween as tween
 import cbtl_video as video
 from PIL import Image,ImageTk
-
+import math
 
         
 
@@ -15,8 +15,11 @@ class Application(tk.Frame):
         self.grid()
         self.imgs = []
         self.active = None
-        self.n = None
+        self.n = []
+        self.newactiveimage = None
+        self.tlimgs = []
         self.create_widgets()
+        
 
     def create_widgets(self):
         self.quit = tk.Button(self, text="QUIT", fg="red",command=root.destroy)
@@ -31,6 +34,7 @@ class Application(tk.Frame):
         i=0
         self.thumbs = self.tl.genThumb()
         self.tlimgs = []
+        self.imgs = []
         for t in self.thumbs:
             self.tlimgs.append(ImageTk.PhotoImage(t))
             tlimg = {}
@@ -46,15 +50,17 @@ class Application(tk.Frame):
 
     def draw_tl(self):
         for l in self.imgs:
-            print(l["index"],"index")
-            print(self.active)
+            #print(l["index"],"index")
+            #print(self.active)
             l["button"].configure(command = lambda: self.setActive(l["index"]))
             l["button"].grid(row=5,column=l["index"])
-        if not self.active == None:
-            self.newactiveimage = self.active
-            self.activeimg = tk.Label(self,image=self.newactiveimage)
-            self.activeimg.grid(row=6,column=0)
-            self.draw_tl()
+        if not self.n == []:
+            print("yeah")
+            self.n.append ( ImageTk.PhotoImage(self.n[0]) )
+            self.activeimg = tk.Label(self,image=self.n[1],relief="raised")
+            self.activeimg.grid(row=6,column=0,columnspan = 6)
+            print(self.activeimg)
+            #self.draw_tl()
 
     def say_hi(self):
         print("hi there, everyone!")
@@ -65,12 +71,10 @@ class Application(tk.Frame):
 
     def setActive(self,ind):
         print("called",ind)
-        self.n = self.tl.get(ind)
-        self.n.resize((200,int(self.n.height*200/self.n.width)))
-        self.active = ImageTk.PhotoImage(self.n)
-        print(self.active)
+        self.n = []
+        self.n.append ( self.tl.get(ind))
         #self.n.show()
-        #self.update_tl()
+        self.draw_tl()
     
 
 tl = tlbase.cowboytimeline(contents = [Image.open("pupyup.png"),Image.open("icecream.png")])
