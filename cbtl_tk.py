@@ -39,7 +39,7 @@ class Application(tk.Frame):
             self.tlimgs.append(ImageTk.PhotoImage(t))
             tlimg = {}
             tlimg["index"] = i
-            tlimg["button"] = tk.Button(self,image = self.tlimgs[i])#,command = lambda: self.setActive(self.tlimg["index"])) #tk.Label(self,image = self.tlimgs[i])
+            tlimg["button"] = tk.Button(self,image = self.tlimgs[i],text = str(i),borderwidth=0)#,command = lambda: self.setActive(self.tlimg["index"])) #tk.Label(self,image = self.tlimgs[i])
             self.imgs.append(tlimg)
             #self.tlimg["button"].grid(row=5,column=i)
             #self.entry = tk.Label(text=str(i))
@@ -50,16 +50,16 @@ class Application(tk.Frame):
 
     def draw_tl(self):
         for l in self.imgs:
-            #print(l["index"],"index")
+            #print(int(l["button"]['text']),"text")
             #print(self.active)
-            l["button"].configure(command = lambda: self.setActive(l["index"]))
+            l["button"].configure(command = lambda i=l["index"]: self.setActive(i))
             l["button"].grid(row=5,column=l["index"])
         if not self.n == []:
-            print("yeah")
+            #print("yeah")
             self.n.append ( ImageTk.PhotoImage(self.n[0]) )
             self.activeimg = tk.Label(self,image=self.n[1],relief="raised")
             self.activeimg.grid(row=6,column=0,columnspan = 6)
-            print(self.activeimg)
+            #print(self.activeimg)
             #self.draw_tl()
 
     def say_hi(self):
@@ -70,9 +70,10 @@ class Application(tk.Frame):
         self.update_tl()
 
     def setActive(self,ind):
-        print("called",ind)
+        #print("called",ind)
         self.n = []
         self.n.append ( self.tl.get(ind))
+        self.n[0].resize(( math.ceil(600/self.n[0].width) , math.ceil(600/self.n[0].height) ))
         #self.n.show()
         self.draw_tl()
     
