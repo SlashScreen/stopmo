@@ -86,16 +86,17 @@ class cowboytimeline:
                 self.tl["frames"].append(Image.new("RGB",self.tl["mdata"]["size"],color=0))
             self.tl["frames"].append(value.resize(self.get(0).size))
         else:
-            self.tl["frames"].insert(frame,value.resize(self.tl["mdata"]["size"]))
+            self.tl["frames"].insert(frame-1,value.resize(self.tl["mdata"]["size"]))
         self.updateMData()
 
     def replace(self,frame,value):
+        print(value)
         if frame > len(self.tl["frames"]):
             for f in range(frame-len(self.tl)):
                 self.tl["frames"].append(Image.new("RGB",self.tl["mdata"]["size"],color=0))
             self.tl["frames"].append(value.resize(self.tl["mdata"]["size"]))
         else:
-            self.tl["frames"][frame]=value.resize(self.tl["mdata"]["size"])
+            self.tl["frames"][frame-1]=value.resize(self.tl["mdata"]["size"])
         self.updateMData()
 
     def delete(self,frame):

@@ -7,8 +7,6 @@ import cbtl_video as video
 from PIL import Image,ImageTk
 import math
 
-        
-
 class Application(tk.Frame):
     def __init__(self,tl, master=None):
         super().__init__(master)
@@ -41,6 +39,11 @@ class Application(tk.Frame):
         self.inserttest = tk.Button(self.toolbarc, text="INSERT", fg="red",command=self.insert)
         self.toolbar.append(self.toolbarc.create_window(0,50,anchor="nw",window = self.inserttest))
         self.inserttest.pack(side="left")
+        
+        self.renderb = tk.Button(self.toolbarc, text="RENDER", fg="red",command=self.render)
+        self.toolbar.append(self.toolbarc.create_window(0,50,anchor="nw",window = self.renderb))
+        self.renderb.pack(side="left")
+        
         self.update_tl()
  #       tk.after(30, self.update_tl())
 
@@ -80,6 +83,9 @@ class Application(tk.Frame):
 
     def say_hi(self):
         print("hi there, everyone!")
+
+    def render(self):
+        tl.render("./tl",fd.asksaveasfilename(defaultextension="*.mp4"))
 
     def insert(self):
         tl.insert(tksd.askinteger(title="Insert",prompt ="Insert at what frame?",parent=self),Image.open(fd.askopenfilename())) #TODO: seperate window with frame + file browser
