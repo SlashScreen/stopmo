@@ -24,7 +24,7 @@ class Application(tk.Frame):
     def create_widgets(self):
         self.toolbarf = tk.Frame(self,bg="black",width=100,height=100)
         self.toolbarc = tk.Canvas(self.toolbarf,width=50, height=50)
-        self.toolbarf.grid(row=0,column=0)
+        self.toolbarf.grid(row=0,column=0,sticky="e")
         self.toolbarc.pack(side="left")
         self.toolbar = []
         
@@ -46,7 +46,7 @@ class Application(tk.Frame):
         self.acf = tk.Frame(self,bg="black",width=100,height=100)
         self.acf.grid(row=6,column=0)
         self.tlf = tk.Frame(self,bg="red",width=100,height=100)
-        self.tlf.grid(row=1,column=0)
+        
         self.c = tk.Canvas(self.acf,width=600, height=300)
         self.c.pack()
         self.t = tk.Canvas(self.tlf,width=800, height=300)
@@ -59,7 +59,7 @@ class Application(tk.Frame):
             tlimg["button"] = tk.Button(self.t,image = self.tlimgs[i],text = str(i),borderwidth=0)#,command = lambda: self.setActive(self.tlimg["index"])) #tk.Label(self,image = self.tlimgs[i])
             self.imgs.append(tlimg)
             i+=1
-        
+        self.tlf.grid(row=1,column=0,columnspan=len(self.imgs),sticky="e")
         self.draw_tl()
 
     def draw_tl(self):
