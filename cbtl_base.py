@@ -93,7 +93,7 @@ class cowboytimeline:
         if frame > len(self.tl["frames"]):
             for f in range(frame-len(self.tl)):
                 self.tl["frames"].append(Image.new("RGB",self.tl["mdata"]["size"],color=0))
-            self.tl["frames"].append(value.resize(sself.tl["mdata"]["size"]))
+            self.tl["frames"].append(value.resize(self.tl["mdata"]["size"]))
         else:
             self.tl["frames"][frame]=value.resize(self.tl["mdata"]["size"])
         self.updateMData()

@@ -34,6 +34,10 @@ class Application(tk.Frame):
         self.toolbar.append(self.toolbarc.create_window(0,0,anchor="nw",window = self.quit))
         self.quit.pack(side="left")
 
+        self.replaceb = tk.Button(self.toolbarc, text="REPLACE", fg="red",command=self.replace)
+        self.toolbar.append(self.toolbarc.create_window(0,0,anchor="nw",window = self.replaceb))
+        self.replaceb.pack(side="left")
+
         self.inserttest = tk.Button(self.toolbarc, text="INSERT", fg="red",command=self.insert)
         self.toolbar.append(self.toolbarc.create_window(0,50,anchor="nw",window = self.inserttest))
         self.inserttest.pack(side="left")
@@ -79,6 +83,10 @@ class Application(tk.Frame):
 
     def insert(self):
         tl.insert(tksd.askinteger(title="Insert",prompt ="Insert at what frame?",parent=self),Image.open(fd.askopenfilename())) #TODO: seperate window with frame + file browser
+        self.update_tl()
+
+    def replace(self):
+        tl.replace(tksd.askinteger(title="Insert",prompt ="Insert at what frame?",parent=self),Image.open(fd.askopenfilename())) #TODO: seperate window with frame + file browser
         self.update_tl()
 
     def setActive(self,ind):
