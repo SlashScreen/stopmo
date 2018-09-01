@@ -39,6 +39,14 @@ class Application(tk.Frame):
         self.inserttest = tk.Button(self.toolbarc, text="INSERT", fg="red",command=self.insert)
         self.toolbar.append(self.toolbarc.create_window(0,50,anchor="nw",window = self.inserttest))
         self.inserttest.pack(side="left")
+
+        self.load = tk.Button(self.toolbarc, text="LOAD", fg="red",command=self.loadFromFile)
+        self.toolbar.append(self.toolbarc.create_window(0,0,anchor="nw",window = self.load))
+        self.load.pack(side="left")
+
+        self.saveb = tk.Button(self.toolbarc, text="SAVE", fg="red",command=self.save)
+        self.toolbar.append(self.toolbarc.create_window(0,0,anchor="nw",window = self.saveb))
+        self.saveb.pack(side="left")
         
         self.renderb = tk.Button(self.toolbarc, text="RENDER", fg="red",command=self.render)
         self.toolbar.append(self.toolbarc.create_window(0,50,anchor="nw",window = self.renderb))
@@ -85,14 +93,21 @@ class Application(tk.Frame):
         print("hi there, everyone!")
 
     def render(self):
-        tl.render("./tl",fd.asksaveasfilename(defaultextension="*.mp4"))
+        self.tl.render("./tl",fd.asksaveasfilename(defaultextension="*.mp4"))
+
+    def save(self):
+        self.tl.save(fd.asksaveasfilename(defaultextension="*.cowboytl"))
+
+    def loadFromFile(self):
+        self.tl=tlbase.cowboytimeline(fromFile=True,file=fd.askopenfilename())
+        self.update_tl()
 
     def insert(self):
-        tl.insert(tksd.askinteger(title="Insert",prompt ="Insert at what frame?",parent=self),Image.open(fd.askopenfilename())) #TODO: seperate window with frame + file browser
+        self.tl.insert(tksd.askinteger(title="Insert",prompt ="Insert at what frame?",parent=self),Image.open(fd.askopenfilename())) #TODO: seperate window with frame + file browser
         self.update_tl()
 
     def replace(self):
-        tl.replace(tksd.askinteger(title="Insert",prompt ="Insert at what frame?",parent=self),Image.open(fd.askopenfilename())) #TODO: seperate window with frame + file browser
+        self.tl.replace(tksd.askinteger(title="Insert",prompt ="Insert at what frame?",parent=self),Image.open(fd.askopenfilename())) #TODO: seperate window with frame + file browser
         self.update_tl()
 
     def setActive(self,ind):
