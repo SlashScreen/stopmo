@@ -1,4 +1,6 @@
 import tkinter as tk
+from tkinter import filedialog as fd
+import tkinter.simpledialog as tksd
 import cbtl_base as tlbase
 import cbtl_tween as tween
 import cbtl_video as video
@@ -59,7 +61,7 @@ class Application(tk.Frame):
             tlimg["button"] = tk.Button(self.t,image = self.tlimgs[i],text = str(i),borderwidth=0)#,command = lambda: self.setActive(self.tlimg["index"])) #tk.Label(self,image = self.tlimgs[i])
             self.imgs.append(tlimg)
             i+=1
-        self.tlf.grid(row=1,column=0,columnspan=len(self.imgs),sticky="e")
+        self.tlf.grid(row=1,column=0,columnspan=len(self.imgs)*2,sticky="e")
         self.draw_tl()
 
     def draw_tl(self):
@@ -76,7 +78,7 @@ class Application(tk.Frame):
         print("hi there, everyone!")
 
     def insert(self):
-        tl.insert(6,Image.open("drfuchs.png")) #TODO: seperate window with frame + file browser
+        tl.insert(tksd.askinteger(title="Insert",prompt ="Insert at what frame?",parent=self),Image.open(fd.askopenfilename())) #TODO: seperate window with frame + file browser
         self.update_tl()
 
     def setActive(self,ind):
