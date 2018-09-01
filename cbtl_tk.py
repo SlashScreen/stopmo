@@ -22,11 +22,19 @@ class Application(tk.Frame):
         
 
     def create_widgets(self):
-        self.quit = tk.Button(self, text="QUIT", fg="red",command=root.destroy)
-        self.quit.grid(row=0,column=0)
+        self.toolbarf = tk.Frame(self,bg="black",width=100,height=100)
+        self.toolbarc = tk.Canvas(self.toolbarf,width=50, height=50)
+        self.toolbarf.grid(row=0,column=0)
+        self.toolbarc.pack(side="left")
+        self.toolbar = []
+        
+        self.quit = tk.Button(self.toolbarc, text="QUIT", fg="red",command=root.destroy)
+        self.toolbar.append(self.toolbarc.create_window(0,0,anchor="nw",window = self.quit))
+        self.quit.pack(side="left")
 
-        self.inserttest = tk.Button(self, text="INSERT", fg="red",command=self.insert)
-        self.inserttest.grid(row=0,column=1)
+        self.inserttest = tk.Button(self.toolbarc, text="INSERT", fg="red",command=self.insert)
+        self.toolbar.append(self.toolbarc.create_window(0,50,anchor="nw",window = self.inserttest))
+        self.inserttest.pack(side="left")
         self.update_tl()
  #       tk.after(30, self.update_tl())
 
@@ -35,32 +43,34 @@ class Application(tk.Frame):
         self.thumbs = self.tl.genThumb()
         self.tlimgs = []
         self.imgs = []
+        self.acf = tk.Frame(self,bg="black",width=100,height=100)
+        self.acf.grid(row=6,column=0)
+        self.tlf = tk.Frame(self,bg="red",width=100,height=100)
+        self.tlf.grid(row=1,column=0)
+        self.c = tk.Canvas(self.acf,width=600, height=300)
+        self.c.pack()
+        self.t = tk.Canvas(self.tlf,width=800, height=300)
+        self.t.pack()
+        self.tlbuttons = []
         for t in self.thumbs:
             self.tlimgs.append(ImageTk.PhotoImage(t))
             tlimg = {}
             tlimg["index"] = i
-            tlimg["button"] = tk.Button(self,image = self.tlimgs[i],text = str(i),borderwidth=0)#,command = lambda: self.setActive(self.tlimg["index"])) #tk.Label(self,image = self.tlimgs[i])
+            tlimg["button"] = tk.Button(self.t,image = self.tlimgs[i],text = str(i),borderwidth=0)#,command = lambda: self.setActive(self.tlimg["index"])) #tk.Label(self,image = self.tlimgs[i])
             self.imgs.append(tlimg)
-            #self.tlimg["button"].grid(row=5,column=i)
-            #self.entry = tk.Label(text=str(i))
-            #self.entry.grid(row=6,column=i)
             i+=1
         
         self.draw_tl()
 
     def draw_tl(self):
         for l in self.imgs:
-            #print(int(l["button"]['text']),"text")
-            #print(self.active)
-            l["button"].configure(command = lambda i=l["index"]: self.setActive(i))
-            l["button"].grid(row=5,column=l["index"])
+            l["button"].configure(anchor = "nw", activebackground = "#33B5E5", relief = "flat",command = lambda i=l["index"]: self.setActive(i))
+            self.tlbuttons.append(self.t.create_window(0,l["index"]*100,anchor="nw",window=l["button"]))
+            l["button"].pack(side="left")
         if not self.n == []:
-            #print("yeah")
             self.n.append ( ImageTk.PhotoImage(self.n[0]) )
-            self.activeimg = tk.Label(self,image=self.n[1],relief="raised")
-            self.activeimg.grid(row=6,column=0,columnspan = 6)
-            #print(self.activeimg)
-            #self.draw_tl()
+            self.activeimg = tk.Label(self.acf,image=self.n[1],relief="raised")
+            self.c.create_image(0,0,image=self.n[1],anchor="nw")
 
     def say_hi(self):
         print("hi there, everyone!")
@@ -73,7 +83,7 @@ class Application(tk.Frame):
         #print("called",ind)
         self.n = []
         self.n.append ( self.tl.get(ind))
-        self.n[0].resize(( math.ceil(600/self.n[0].width) , math.ceil(600/self.n[0].height) ))
+        self.n[0].resize(( math.ceil(10/self.n[0].width) , math.ceil(10/self.n[0].height) ),Image.ANTIALIAS)
         #self.n.show()
         self.draw_tl()
     
