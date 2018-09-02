@@ -19,6 +19,7 @@ class Application(tk.Frame):
         self.newactiveimage = None
         self.tlimgs = []
         self.create_widgets()
+        self.setActive(0)
         
 
     def create_widgets(self):
@@ -39,6 +40,10 @@ class Application(tk.Frame):
         self.inserttest = tk.Button(self.toolbarc, text="INSERT", fg="red",command=self.insert)
         self.toolbar.append(self.toolbarc.create_window(0,50,anchor="nw",window = self.inserttest))
         self.inserttest.pack(side="left")
+
+        self.delframe = tk.Button(self.toolbarc, text="DELETE", fg="red",command=self.delete)
+        self.toolbar.append(self.toolbarc.create_window(0,50,anchor="nw",window = self.delframe))
+        self.delframe.pack(side="left")
 
         self.load = tk.Button(self.toolbarc, text="LOAD", fg="red",command=self.loadFromFile)
         self.toolbar.append(self.toolbarc.create_window(0,0,anchor="nw",window = self.load))
@@ -86,8 +91,8 @@ class Application(tk.Frame):
             l["button"].pack(side="left")
         if not self.n == []:
             self.n.append ( ImageTk.PhotoImage(self.n[0]) )
-            self.activeimg = tk.Label(self.acf,image=self.n[1],relief="raised")
-            self.c.create_image(0,0,image=self.n[1],anchor="nw")
+            self.activeimg = tk.Label(self.acf,image=self.n[2],relief="raised")
+            self.c.create_image(0,0,image=self.n[2],anchor="nw")
 
     def say_hi(self):
         print("hi there, everyone!")
@@ -97,6 +102,11 @@ class Application(tk.Frame):
 
     def save(self):
         self.tl.save(fd.asksaveasfilename(defaultextension="*.cowboytl"))
+
+    def delete(self):
+        print(self.n)
+        self.tl.delete(self.n[1])
+        self.update_tl()
 
     def loadFromFile(self):
         self.tl=tlbase.cowboytimeline(fromFile=True,file=fd.askopenfilename())
@@ -114,6 +124,7 @@ class Application(tk.Frame):
         #print("called",ind)
         self.n = []
         self.n.append ( self.tl.get(ind))
+        self.n.append(ind)
         self.n[0].resize(( math.ceil(10/self.n[0].width) , math.ceil(10/self.n[0].height) ),Image.ANTIALIAS)
         #self.n.show()
         self.draw_tl()
