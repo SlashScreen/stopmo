@@ -73,6 +73,7 @@ class Application(tk.Frame):
         self.c.pack()
         self.t = tk.Canvas(self.tlf,width=800, height=300)
         self.t.pack()
+        
         self.tlbuttons = []
         for t in self.thumbs:
             self.tlimgs.append(ImageTk.PhotoImage(t))
@@ -85,9 +86,10 @@ class Application(tk.Frame):
         self.draw_tl()
 
     def draw_tl(self):
+        #print(len(self.imgs),self.tl.getMData()["duration"])
         for l in self.imgs:
             l["button"].configure(anchor = "nw", activebackground = "#33B5E5", relief = "flat",command = lambda i=l["index"]: self.setActive(i))
-            self.tlbuttons.append(self.t.create_window(0,l["index"]*100,anchor="nw",window=l["button"]))
+            self.tlbuttons.append(self.t.create_window(0,l["index"]*100,anchor="nw",window=l["button"],tags=("tlbutton")))
             l["button"].pack(side="left")
         if not self.n == []:
             self.n.append ( ImageTk.PhotoImage(self.n[0]) )
@@ -104,8 +106,14 @@ class Application(tk.Frame):
         self.tl.save(fd.asksaveasfilename(defaultextension="*.cowboytl"))
 
     def delete(self):
-        print(self.n)
         self.tl.delete(self.n[1])
+        del self.thumbs[self.n[1]]
+        #print(self.tlbuttons[self.n[1]],"button")
+        #for element in self.t.find("all"):
+            #print(element)
+            
+        #self.tlbuttons[self.n[1]]["button"].pack_forget()
+        del self.tlbuttons[self.n[1]]
         self.update_tl()
 
     def loadFromFile(self):
@@ -130,7 +138,7 @@ class Application(tk.Frame):
         self.draw_tl()
     
 
-tl = tlbase.cowboytimeline(contents = [Image.open("pupyup.png"),Image.open("icecream.png")])
+tl = tlbase.cowboytimeline()#contents = [Image.open("pupyup.png"),Image.open("icecream.png")])
 root = tk.Tk()
 root.geometry("1000x800")
 app = Application(tl,master=root)

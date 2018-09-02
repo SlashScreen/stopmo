@@ -101,6 +101,7 @@ class cowboytimeline:
 
     def delete(self,frame):
         del self.tl["frames"][frame]
+        self.updateMData()
 
     def append(self,img):
         self.tl["frames"].append(img.resize(self.tl["mdata"]["size"]))
