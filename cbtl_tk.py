@@ -27,35 +27,20 @@ class Application(tk.Frame):
         self.toolbarc = tk.Canvas(self.toolbarf,width=50, height=50)
         self.toolbarf.grid(row=0,column=0,sticky="e")
         self.toolbarc.pack(side="left")
-        self.toolbar = []
         
-        self.quit = tk.Button(self.toolbarc, text="QUIT", fg="red",command=root.destroy)
-        self.toolbar.append(self.toolbarc.create_window(0,0,anchor="nw",window = self.quit))
-        self.quit.pack(side="left")
-
-        self.replaceb = tk.Button(self.toolbarc, text="REPLACE", fg="red",command=self.replace)
-        self.toolbar.append(self.toolbarc.create_window(0,0,anchor="nw",window = self.replaceb))
-        self.replaceb.pack(side="left")
-
-        self.inserttest = tk.Button(self.toolbarc, text="INSERT", fg="red",command=self.insert)
-        self.toolbar.append(self.toolbarc.create_window(0,50,anchor="nw",window = self.inserttest))
-        self.inserttest.pack(side="left")
-
-        self.delframe = tk.Button(self.toolbarc, text="DELETE", fg="red",command=self.delete)
-        self.toolbar.append(self.toolbarc.create_window(0,50,anchor="nw",window = self.delframe))
-        self.delframe.pack(side="left")
-
-        self.load = tk.Button(self.toolbarc, text="LOAD", fg="red",command=self.loadFromFile)
-        self.toolbar.append(self.toolbarc.create_window(0,0,anchor="nw",window = self.load))
-        self.load.pack(side="left")
-
-        self.saveb = tk.Button(self.toolbarc, text="SAVE", fg="red",command=self.save)
-        self.toolbar.append(self.toolbarc.create_window(0,0,anchor="nw",window = self.saveb))
-        self.saveb.pack(side="left")
-        
-        self.renderb = tk.Button(self.toolbarc, text="RENDER", fg="red",command=self.render)
-        self.toolbar.append(self.toolbarc.create_window(0,50,anchor="nw",window = self.renderb))
-        self.renderb.pack(side="left")
+        self.toolbarm = tk.Menu(self)
+        self.toolbarm_file = tk.Menu(self.toolbarm)
+        self.toolbarm.add_cascade(label="File", menu=self.toolbarm_file)
+        self.toolbarm_file.add_command(label="Save", command=self.save)
+        self.toolbarm_file.add_command(label="Load", command=self.loadFromFile)
+        self.toolbarm_file.add_command(label="Render", command=self.render)
+        self.toolbarm_file.add_separator()
+        self.toolbarm_file.add_command(label="Delete", command=self.delete)
+        self.toolbarm_file.add_command(label="Insert", command=self.insert)
+        self.toolbarm_file.add_command(label="Replace", command=self.replace)
+        self.toolbarm_file.add_separator()
+        self.toolbarm_file.add_command(label="Quit", command=root.destroy)
+        #self.toolbarf.config(menu=self.toolbarm)
         
         self.update_tl()
  #       tk.after(30, self.update_tl())
@@ -141,5 +126,7 @@ class Application(tk.Frame):
 tl = tlbase.cowboytimeline()#contents = [Image.open("pupyup.png"),Image.open("icecream.png")])
 root = tk.Tk()
 root.geometry("1000x800")
+
 app = Application(tl,master=root)
+root.config(menu=app.toolbarm)
 app.mainloop()
