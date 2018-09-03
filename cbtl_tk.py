@@ -30,16 +30,21 @@ class Application(tk.Frame):
         
         self.toolbarm = tk.Menu(self)
         self.toolbarm_file = tk.Menu(self.toolbarm)
+        self.toolbarm_video = tk.Menu(self.toolbarm)
         self.toolbarm.add_cascade(label="File", menu=self.toolbarm_file)
+        self.toolbarm.add_cascade(label="Video", menu=self.toolbarm_video)
+        
         self.toolbarm_file.add_command(label="Save", command=self.save)
         self.toolbarm_file.add_command(label="Load", command=self.loadFromFile)
-        self.toolbarm_file.add_command(label="Render", command=self.render)
         self.toolbarm_file.add_separator()
         self.toolbarm_file.add_command(label="Delete", command=self.delete)
         self.toolbarm_file.add_command(label="Insert", command=self.insert)
         self.toolbarm_file.add_command(label="Replace", command=self.replace)
         self.toolbarm_file.add_separator()
         self.toolbarm_file.add_command(label="Quit", command=root.destroy)
+
+        self.toolbarm_video.add_command(label="Render", command=self.render)
+        self.toolbarm_video.add_command(label="Change FPS", command=self.changeFPS)
         #self.toolbarf.config(menu=self.toolbarm)
         
         self.update_tl()
@@ -104,6 +109,10 @@ class Application(tk.Frame):
     def loadFromFile(self):
         self.tl=tlbase.cowboytimeline(fromFile=True,file=fd.askopenfilename())
         self.update_tl()
+
+    def changeFPS(self):
+        #print("changeFPS")
+        self.tl.changeFPS(tksd.askfloat(title="FPS",prompt ="What to change FPS to?",parent=self))
 
     def insert(self):
         self.tl.insert(tksd.askinteger(title="Insert",prompt ="Insert at what frame?",parent=self),Image.open(fd.askopenfilename())) #TODO: seperate window with frame + file browser
