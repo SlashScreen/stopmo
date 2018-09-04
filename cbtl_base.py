@@ -5,6 +5,7 @@ import cv2
 import os
 from tkinter import Tk
 from tkinter import filedialog
+import shutil
 
 def cleanFilename(string):
     return int(string.replace(".png",''))
@@ -24,7 +25,7 @@ class cowboytimeline:
         self.tl={}
         self.tl["frames"] = []
         self.tl["mdata"] = {}
-        print(file)
+        #print(file)
         if not fromFile:
             if not contents == []:
                 self.tl["frames"]=contents
@@ -42,7 +43,7 @@ class cowboytimeline:
             else:
                 self.tl["mdata"]=data
         else:
-            print("fromfile")
+            #print("fromfile")
             with ZipFile(file) as archive:
                 f = open("./tl/tl.cbtldat","r+")
                 lines = f.read()
@@ -52,7 +53,7 @@ class cowboytimeline:
                         if self.tl["frames"] == []:
                             self.tl["frames"].append(Image.open(file))
                         else:
-                            print(self.tl["mdata"])
+                            #print(self.tl["mdata"])
                             self.tl["frames"].append(Image.open(file).resize(self.tl["mdata"]["size"]))
             
 
@@ -108,7 +109,8 @@ class cowboytimeline:
         self.tl["frames"].append(img.resize(self.tl["mdata"]["size"]))
 
     def save(self,filename,debug=False):
-        
+        shutil.rmtree('./tl/')
+        os.makedirs("./tl")
         with ZipFile(filename, 'w') as archive:
             i=0
             for v in self.get():
