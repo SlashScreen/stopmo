@@ -52,6 +52,7 @@ class cowboytimeline:
                         if self.tl["frames"] == []:
                             self.tl["frames"].append(Image.open(file))
                         else:
+                            print(self.tl["mdata"])
                             self.tl["frames"].append(Image.open(file).resize(self.tl["mdata"]["size"]))
             
 

@@ -40,6 +40,7 @@ class Application(tk.Frame):
         self.toolbarm_file.add_command(label="Delete", command=self.delete)
         self.toolbarm_file.add_command(label="Insert", command=self.insert)
         self.toolbarm_file.add_command(label="Replace", command=self.replace)
+        self.toolbarm_file.add_command(label="Append", command=self.append)
         self.toolbarm_file.add_separator()
         self.toolbarm_file.add_command(label="Quit", command=root.destroy)
 
@@ -116,6 +117,10 @@ class Application(tk.Frame):
 
     def insert(self):
         self.tl.insert(tksd.askinteger(title="Insert",prompt ="Insert at what frame?",parent=self),Image.open(fd.askopenfilename())) #TODO: seperate window with frame + file browser
+        self.update_tl()
+
+    def append(self):
+        self.tl.append(Image.open(fd.askopenfilename())) #TODO: seperate window with frame + file browser
         self.update_tl()
 
     def replace(self):
