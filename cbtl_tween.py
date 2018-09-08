@@ -10,7 +10,7 @@ def generateInbetweens(tl,a = .5):
     pos = list(inserts.keys())
     vals = list(inserts.values())
     for f in range(len(inserts)):
-        tl.insert(pos[f],vals[f])
+        tl.insert(pos[f]+1,vals[f])
     tl.changeFPS(tl.getMData()["fps"]*2)
 
 

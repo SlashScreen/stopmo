@@ -6,6 +6,7 @@ import cbtl_tween as tween
 import cbtl_video as video
 from PIL import Image,ImageTk
 import math
+import ast
 
 class Application(tk.Frame):
     def __init__(self,tl, master=None):
@@ -18,8 +19,18 @@ class Application(tk.Frame):
         self.n = []
         self.newactiveimage = None
         self.tlimgs = []
+        try:
+            f=open("./appfiles/cache.data","r+")
+            lines = f.read()
+            tempcache = ast.literal_eval(lines)
+            self.currentfilepath=tempcache["lastfile"]
+            #print(self.currentfilepath)
+            self.loadFromFile(fromCache=True)
+        except:
+            self.currentfilepath = ""
         self.create_widgets()
         self.setActive(0)
+
         
 
     def create_widgets(self):
@@ -33,7 +44,8 @@ class Application(tk.Frame):
         self.toolbarm_video = tk.Menu(self.toolbarm)
         self.toolbarm.add_cascade(label="File", menu=self.toolbarm_file)
         self.toolbarm.add_cascade(label="Video", menu=self.toolbarm_video)
-        
+
+        self.toolbarm_file.add_command(label="New", command=self.new)
         self.toolbarm_file.add_command(label="Save", command=self.save)
         self.toolbarm_file.add_command(label="Load", command=self.loadFromFile)
         self.toolbarm_file.add_separator()
@@ -43,7 +55,7 @@ class Application(tk.Frame):
         self.toolbarm_file.add_command(label="Append", command=self.append)
         self.toolbarm_file.add_command(label="Generate Inbetweens", command=self.tween)
         self.toolbarm_file.add_separator()
-        self.toolbarm_file.add_command(label="Quit", command=root.destroy)
+        self.toolbarm_file.add_command(label="Quit", command=self.quit)
 
         self.toolbarm_video.add_command(label="Render", command=self.render)
         self.toolbarm_video.add_command(label="Change FPS", command=self.changeFPS)
@@ -54,6 +66,8 @@ class Application(tk.Frame):
 
     def update_tl(self):
         i=0
+        self.filepath_l = tk.Label(text="Current filepath: "+self.currentfilepath)
+        self.filepath_l.grid(row=1,column=0)
         self.thumbs = self.tl.genThumb()
         self.tlimgs = []
         self.imgs = []
@@ -95,11 +109,27 @@ class Application(tk.Frame):
         tween.generateInbetweens(self.tl,a=.5)
         self.update_tl()
 
+    def new(self):
+        self.tl=tlbase.cowboytimeline()
+        self.currentfilepath = ""
+        self.update_tl()
+
     def render(self):
         self.tl.render("./tl",fd.asksaveasfilename(defaultextension="*.mp4"))
 
     def save(self):
-        self.tl.save(fd.asksaveasfilename(defaultextension="*.cowboytl"))
+        path = fd.asksaveasfilename(defaultextension="*.cowboytl")
+        self.tl.save(path)
+        self.currentfilepath = path
+
+    def quit(self):
+        self.save()
+        cache = {}
+        cache["lastfile"] = self.currentfilepath
+        f= open("./appfiles/cache.data","w+")
+        f.write(str(cache))
+        f.close()
+        root.destroy()
 
     def delete(self):
         self.tl.delete(self.n[1])
@@ -112,9 +142,12 @@ class Application(tk.Frame):
         del self.tlbuttons[self.n[1]]
         self.update_tl()
 
-    def loadFromFile(self):
-        self.tl=tlbase.cowboytimeline(fromFile=True,file=fd.askopenfilename())
-        self.update_tl()
+    def loadFromFile(self,fromCache=False):
+        if not fromCache:           
+            self.currentfilepath = fd.askopenfilename()
+        self.tl=tlbase.cowboytimeline(fromFile=True,file=self.currentfilepath)
+        if not fromCache:
+            self.update_tl()
 
     def changeFPS(self):
         #print("changeFPS")
