@@ -41,6 +41,7 @@ class Application(tk.Frame):
         self.toolbarm_file.add_command(label="Insert", command=self.insert)
         self.toolbarm_file.add_command(label="Replace", command=self.replace)
         self.toolbarm_file.add_command(label="Append", command=self.append)
+        self.toolbarm_file.add_command(label="Generate Inbetweens", command=self.tween)
         self.toolbarm_file.add_separator()
         self.toolbarm_file.add_command(label="Quit", command=root.destroy)
 
@@ -89,6 +90,10 @@ class Application(tk.Frame):
 
     def say_hi(self):
         print("hi there, everyone!")
+
+    def tween(self):
+        tween.generateInbetweens(self.tl,a=.5)
+        self.update_tl()
 
     def render(self):
         self.tl.render("./tl",fd.asksaveasfilename(defaultextension="*.mp4"))

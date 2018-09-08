@@ -67,7 +67,7 @@ class cowboytimeline:
         thumbs = []
         for v in self.tl["frames"]:
             n = v.copy()
-            n.thumbnail((200,int(self.tl["mdata"]["size"][1]*(200/(self.tl["mdata"]["size"][0]) ) )) )
+            n.thumbnail((200,int(self.getMData()["size"][1]*(200/(self.getMData()["size"][0]) ) )) )
             thumbs.append(n)
         return thumbs
     
@@ -79,7 +79,7 @@ class cowboytimeline:
         self.tl["mdata"]["duration"] = len(self.tl["frames"])
 
     def changeFPS(self,fps):
-        self.tl["mdata"] = fps
+        self.tl["mdata"]["fps"] = fps
         #self.updateMData()
 
     def insert(self,frame,value):

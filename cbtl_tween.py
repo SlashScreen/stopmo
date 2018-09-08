@@ -3,9 +3,10 @@ import cbtl_base
 
 def generateInbetweens(tl,a = .5):
     inserts = {}
+    size = tl.getMData()["size"]
     for f in range(len(tl.get())):
         if not f==0:
-            inserts[f] = Image.blend(tl.get(f),tl.get(f-1),a)
+            inserts[f] = Image.blend(tl.get(f).convert('RGBA'),tl.get(f-1).convert('RGBA'),a)
     pos = list(inserts.keys())
     vals = list(inserts.values())
     for f in range(len(inserts)):
