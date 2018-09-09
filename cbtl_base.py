@@ -45,8 +45,8 @@ class cowboytimeline:
         else:
             #print("fromfile")
             with ZipFile(file) as archive:
-                f = open("./tl/tl.cbtldat","r+")
-                lines = f.read()
+                #f = open("./tl/tl.cbtldat","r+")
+                lines = archive.read("tl/tl.cbtldat").decode("utf-8") 
                 self.tl["mdata"] = ast.literal_eval(lines)
                 for i in range (len(archive.infolist())-1):
                     with archive.open("tl/{i}.png".format(i=i)) as file:

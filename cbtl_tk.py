@@ -30,6 +30,7 @@ class Application(tk.Frame):
             self.currentfilepath = ""
         self.create_widgets()
         self.setActive(0)
+        self.tlbuttons = []
 
         
 
@@ -66,6 +67,10 @@ class Application(tk.Frame):
 
     def update_tl(self):
         i=0
+        for child in self.imgs:
+            #if isinstance(child, tk.Button):
+            #print("destroyed")
+            child["button"].destroy()
         self.filepath_l = tk.Label(text="Current filepath: "+self.currentfilepath)
         self.filepath_l.grid(row=1,column=0)
         self.thumbs = self.tl.genThumb()
@@ -75,10 +80,17 @@ class Application(tk.Frame):
         self.acf.grid(row=6,column=0)
         self.tlf = tk.Frame(self,bg="red",width=100,height=100)
         
+        
         self.c = tk.Canvas(self.acf,width=600, height=300)
         self.c.pack()
-        self.t = tk.Canvas(self.tlf,width=800, height=300)
-        self.t.pack()
+        
+        self.t = tk.Canvas(self.tlf,width=800, height=300,)
+        self.t.pack(side="left",expand = False)
+        self.hscrollbar = tk.Scrollbar(self.t, orient = "horizontal")
+        self.hscrollbar.pack(fill = "x", side = "bottom", expand = False)
+        
+        self.t.configure(xscrollcommand = self.hscrollbar.set)
+        self.t.xview_moveto(0)
         
         self.tlbuttons = []
         for t in self.thumbs:
@@ -101,6 +113,7 @@ class Application(tk.Frame):
             self.n.append ( ImageTk.PhotoImage(self.n[0]) )
             self.activeimg = tk.Label(self.acf,image=self.n[2],relief="raised")
             self.c.create_image(0,0,image=self.n[2],anchor="nw")
+        self.hscrollbar.config(command = self.t.xview)
 
     def say_hi(self):
         print("hi there, everyone!")
@@ -134,11 +147,6 @@ class Application(tk.Frame):
     def delete(self):
         self.tl.delete(self.n[1])
         del self.thumbs[self.n[1]]
-        #print(self.tlbuttons[self.n[1]],"button")
-        #for element in self.t.find("all"):
-            #print(element)
-            
-        #self.tlbuttons[self.n[1]]["button"].pack_forget()
         del self.tlbuttons[self.n[1]]
         self.update_tl()
 
