@@ -8,6 +8,13 @@ def capture(img,tl):
     tl.append(out)
     out.show()
 
+def captureFeed():
+    cam = cv2.VideoCapture(0)
+    check,frame = cam.read()
+    cv2_im = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
+    out = Image.fromarray(cv2_im)
+    return out
+
 
 def captureWindow(tl):
     cam = cv2.VideoCapture(0)

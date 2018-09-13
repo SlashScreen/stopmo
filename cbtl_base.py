@@ -92,7 +92,7 @@ class cowboytimeline:
         self.updateMData()
 
     def replace(self,frame,value):
-        print(value)
+        #print(value)
         if frame > len(self.tl["frames"]):
             for f in range(frame-len(self.tl)):
                 self.tl["frames"].append(Image.new("RGB",self.tl["mdata"]["size"],color=0))
@@ -131,9 +131,9 @@ class cowboytimeline:
                     i+=1
             tldat = str(self.tl["mdata"])
             f= open("./tl/tl.cbtldat","w+")
-            print (tldat)
+            #print (tldat)
             f.write(tldat)
-            print("file:",f.read())
+            #print("file:",f.read())
             archive.write("./tl/tl.cbtldat")
         f.close()
 

@@ -26,7 +26,8 @@ class Application(tk.Frame):
             self.currentfilepath=tempcache["lastfile"]
             #print(self.currentfilepath)
             self.loadFromFile(fromCache=True)
-        except:
+        except Exception as e:
+            print(e)
             self.currentfilepath = ""
         self.create_widgets()
         self.setActive(0)
@@ -91,6 +92,7 @@ class Application(tk.Frame):
         
         self.t.configure(xscrollcommand = self.hscrollbar.set)
         self.t.xview_moveto(0)
+        self.hscrollbar.config(command = self.t.xview)
         
         self.tlbuttons = []
         for t in self.thumbs:
@@ -111,9 +113,10 @@ class Application(tk.Frame):
             l["button"].pack(side="left")
         if not self.n == []:
             self.n.append ( ImageTk.PhotoImage(self.n[0]) )
+            print(len(self.n))
             self.activeimg = tk.Label(self.acf,image=self.n[2],relief="raised")
             self.c.create_image(0,0,image=self.n[2],anchor="nw")
-        self.hscrollbar.config(command = self.t.xview)
+        
 
     def say_hi(self):
         print("hi there, everyone!")
@@ -178,7 +181,7 @@ class Application(tk.Frame):
         self.n = []
         self.n.append ( self.tl.get(ind))
         self.n.append(ind)
-        self.n[0].resize(( math.ceil(10/self.n[0].width) , math.ceil(10/self.n[0].height) ),Image.ANTIALIAS)
+        self.n[0].resize(( math.ceil(200/self.n[0].width) , math.ceil(200/self.n[0].height) ),Image.ANTIALIAS)
         #self.n.show()
         self.draw_tl()
     
