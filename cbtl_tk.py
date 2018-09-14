@@ -113,8 +113,8 @@ class Application(tk.Frame):
             l["button"].pack(side="left")
         if not self.n == []:
             self.n.append ( ImageTk.PhotoImage(self.n[0]) )
-            print(len(self.n))
-            self.activeimg = tk.Label(self.acf,image=self.n[2],relief="raised")
+            #print(len(self.n))
+            #self.activeimg = tk.Label(self.acf,image=self.n[2],relief="raised")
             self.c.create_image(0,0,image=self.n[2],anchor="nw")
         
 
